@@ -1,53 +1,61 @@
-# Storyboard: [Topic Name]
+# Storyboard — [Video Topic]
 
-- **Resolution**: 1920 × 1080
-- **FPS**: 30
-- **Total Estimated Frames**: ~7200 frames (4 minutes @ 30 FPS)
+- **Episode ID:** [NNN-topic]
+- **Format:** 1920 × 1080, 30 FPS, 16:9
+- **Inputs:** Approved `research.md` and `script.md`
+- **Status:** Draft / Visual approved / Audio-synced
 
----
+## Timeline overview
 
-## Scene Timeline
+| Scene | Goal | Narration section | Start (s) | Duration (s) | Global start frame | Frames in scene |
+|---|---|---|---:|---:|---:|---:|
+| 01 | [Hook] | [Script section] | | | | |
+| 02 | [Problem] | [Script section] | | | | |
+| 03 | [Explanation] | [Script section] | | | | |
+| 04 | [Flow] | [Script section] | | | | |
+| 05 | [Trade-offs] | [Script section] | | | | |
+| 06 | [Summary] | [Script section] | | | | |
 
-### Scene 1: Problem Hook
-- **Frame Range**: `0` – `1050` (0s – 35s)
-- **Layout**: Centered single service card with incoming packet stream.
-- **Components Used**: `Client`, `Server`, `AnimatedArrow`, `Packet`.
-- **Key Animations**:
-  - `f 0 - 30`: Client and Server enter with `snappy` spring.
-  - `f 30 - 300`: Normal green packet stream flows at 20 frames/hop.
-  - `f 300 - 450`: Packet rate quadruples; Server border interpolates to `#F07878` (error red).
-  - `f 450 - 550`: Error badge pop-in (`503 Service Unavailable`).
+**Timing rule:** 1 second = 30 frames. Update durations using actual narration. A frame read inside a Remotion `<Sequence>` may be local to that Sequence; do not mix it up with composition-global frames. Account for transition overlaps.
 
----
+## Scene details
 
-### Scene 2: Naive Solution
-- **Frame Range**: `1050` – `2250` (35s – 75s)
-- **Layout**: Split 2-node cluster with naive distributor.
-- **Components Used**: `Client`, `Server` (x2), `Arrow`, `InfoCard`.
-- **Key Animations**:
-  - `f 1050 - 1100`: Canvas transitions via `<TransitionSeries.Fade>`.
-  - `f 1100 - 1400`: Show uneven hash distribution, one node overheating.
+*Duplicate this block for each scene.*
 
----
+### Scene [NN] — [Scene Name]
 
-### Scene 3: Core Mechanism Deep Dive
-- **Frame Range**: `2250` – `4950` (75s – 165s)
-- **Layout**: Master diagram layout (Client ➔ LoadBalancer ➔ 3x Worker Nodes + Redis Cache).
-- **Components Used**: `Client`, `LoadBalancer`, `Server` (x3), `Cache`, `AnimatedArrow`, `Packet`.
-- **Key Animations**:
-  - Step-by-step introduction of virtual slots/consistent ring or token bucket refill.
-  - Smooth camera zoom into single worker node state.
+- **Goal:** [What viewers should understand after this scene]
+- **Narration:** [Approved text or exact script section]
+- **Duration:** [X seconds / Y frames]
+- **Layout:** [Node positions, alignment, safe margins, visual hierarchy]
+- **Reusable components:** [Actual components needed]
+- **On-screen text:** [Exact brief labels]
+- **Connections / packet directions:** [Source -> destination; response path]
+- **Visual states:** [Default -> Active -> Success / Warning / Error]
 
----
+**Animation timeline (local frames):**
 
-### Scene 4: Trade-off Comparison
-- **Frame Range**: `4950` – `6750` (165s – 225s)
-- **Layout**: 2-column comparative layout or metrics panel.
-- **Components Used**: `InfoCard` (x2), `TerminalWindow`, metrics bar graphs.
+| Local frame range | Visual action | Narration cue / purpose |
+|---|---|---|
+| 0–[N] | [Reveal a node / label] | [Spoken phrase] |
+| [N]–[M] | [Animate connection / packet] | [Spoken phrase] |
+| [M]–end | [Hold, highlight or transition] | [Spoken phrase] |
 
----
+- **Transition:** [Cut / Fade / Slide / None]
+- **Audio / SFX:** [File with license, or none]
+- **Risk to check:** [Clipping / overlap / readability / incorrect logic]
+- **Acceptance:** [What must be visible and understandable]
 
-### Scene 5: Outro & Recap
-- **Frame Range**: `6750` – `7200` (225s – 240s)
-- **Layout**: Centered architecture diagram with 3 takeaway cards below.
-- **Components Used**: `SceneTitle`, `InfoCard` (x3).
+## Additional needs
+
+| Asset / component | Already available? | Needed action | License / source |
+|---|---|---|---|
+| [Item] | [Yes / No] | [Reuse / Add] | [URL or original] |
+
+## Storyboard approval
+
+- [ ] Every scene has one clear purpose and a matching narration cue.
+- [ ] Diagram behavior and error/response logic have been checked.
+- [ ] On-screen text remains readable at mobile size.
+- [ ] Timings can be updated after recording without redesigning everything.
+- [ ] Existing Remotion components are reused wherever possible.

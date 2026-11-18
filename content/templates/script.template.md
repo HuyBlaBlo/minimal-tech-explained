@@ -1,45 +1,103 @@
-# Script: [Topic Name]
+# English Narration Script — [Video Topic]
 
-- **Target Duration**: ~3:30 - 4:00 (~500 words)
-- **Target WPM**: ~140 words per minute
-- **Voice Style**: Calm, authoritative, concise, neutral technical delivery.
+- **Episode ID:** [NNN-topic]
+- **Target duration:** 3–5 minutes (verify using recorded narration)
+- **Initial draft length:** approximately 350–500 words, adjustable for actual pacing
+- **Audience:** Beginner software developers
+- **Research file:** `content/[NNN-topic]/research.md`
+- **Status:** Draft / Fact-checked / Approved / Recorded
 
----
+## Video objective
 
-### Scene 1: Hook & The Breakdown (0:00 - 0:35)
-**Visual Cue**: *Dark canvas. Monolithic service receiving steady requests. Suddenly traffic surges 10x; server borders turn red, error counters spike.*
+**Question to answer:** [One central question]
 
-> **Narrator**:  
-> [Write spoken voiceover here. Frame the problem immediately without preamble. Explain what fails when scale increases.]
+**Three takeaways:**
+1. [Takeaway]
+2. [Takeaway]
+3. [Takeaway]
 
----
+## Scene 01 — Hook
 
-### Scene 2: Naive Solution & Its Limitations (0:35 - 1:15)
-**Visual Cue**: *Introduce basic mitigation (e.g., standard round robin or single cache node). Show why edge cases (hotkeys, node crashes) break the system.*
+**Narration:**
 
-> **Narrator**:  
-> [Explain why the obvious fix falls short in production.]
+> [Write the final spoken English sentences here.]
 
----
+**Visual cue:** [What viewers see; no unnecessary decoration.]
 
-### Scene 3: The Core Mechanism (1:15 - 2:45)
-**Visual Cue**: *Main animated visual sequence. Introduce components step-by-step. Animated packets flow between Client, Router/LB, and Services.*
+**Technical claim / source:** [Claim and URL, or none]
 
-> **Narrator**:  
-> [Walk through the core algorithmic mechanics step-by-step.]
+## Scene 02 — Problem
 
----
+**Narration:**
 
-### Scene 4: Trade-offs & Production Reality (2:45 - 3:45)
-**Visual Cue**: *Split screen or comparative matrix illustrating trade-offs (e.g. latency vs consistency, memory overhead).*
+> [English narration]
 
-> **Narrator**:  
-> [Discuss when to use this, and what engineering costs you incur.]
+**Visual cue:** [Problem and its impact]
 
----
+**Technical claim / source:** [URL or none]
 
-### Scene 5: Summary & Mental Model (3:45 - 4:15)
-**Visual Cue**: *Clean full-architecture diagram showing the healthy state. 3 key takeaway bullet cards reveal sequentially.*
+## Scene 03 — Explanation
 
-> **Narrator**:  
-> [Recap the 3 core takeaways in under 30 seconds.]
+**Narration:**
+
+> [English narration]
+
+**Visual cue:** [Introduce the components and main mechanism]
+
+**Technical claim / source:** [URL or none]
+
+## Scene 04 — Request Flow
+
+**Narration:**
+
+> [English narration]
+
+**Visual cue:** [Show the verified step-by-step flow and response]
+
+**Technical claim / source:** [URL or none]
+
+## Scene 05 — Trade-offs / Failure
+
+**Narration:**
+
+> [English narration]
+
+**Visual cue:** [One relevant limitation, comparison, or failure case]
+
+**Technical claim / source:** [URL or none]
+
+## Scene 06 — Summary
+
+**Narration:**
+
+> [English narration]
+
+**Visual cue:** [Final diagram plus concise takeaways]
+
+## Timing after voice recording
+
+| Scene | Audio file | Actual duration (s) | Frames @ 30 FPS | Notes |
+|---|---|---:|---:|---|
+| 01 | `voice/01_hook.wav` | | | |
+| 02 | `voice/02_problem.wav` | | | |
+| 03 | `voice/03_explanation.wav` | | | |
+| 04 | `voice/04_flow.wav` | | | |
+| 05 | `voice/05_tradeoffs.wav` | | | |
+| 06 | `voice/06_summary.wav` | | | |
+| **Total** | | | | |
+
+## Pronunciation notes
+
+| Technical term | Pronunciation / stress / pause note |
+|---|---|
+| [Term] | [Note] |
+
+## Script approval
+
+- [ ] Technical facts match approved research.
+- [ ] English is natural, concise and beginner-friendly.
+- [ ] Request/response directions are correct.
+- [ ] No unnecessary claims, metrics or filler.
+- [ ] Script has been read aloud and approved before final recording.
+
+*Adapt the number and names of scenes to the topic rather than forcing all six.*

@@ -1,40 +1,72 @@
-# Agent Guidelines: Minimal Tech Explainer Production System
+# AGENTS.md — Minimal Tech Explainer
 
-This document contains instructions for Antigravity, Claude Code, and compatible AI coding agents collaborating on this codebase.
+> Quy tắc chung cho Antigravity, Claude Code, Codex và coding agent tương thích. Antigravity đang là agent chính. **Đọc file này trước khi thay đổi code.**
 
----
+## 1. Mục tiêu, phạm vi và trạng thái
 
-## 1. Project Overview & Architecture
-`minimal-tech-explainer` is an automated, code-driven video production system built with Remotion, React 19, and TypeScript. It produces faceless, technical 3–5 minute videos on System Design, Backend Engineering, Networking, and Cloud Computing.
+- Một **Remotion base project** phục vụ nhiều video faceless English tech explainers (3–5 phút; 1920×1080; 30 FPS).
+- Chủ đề: System Design, Backend, Networking, Databases, Distributed Systems, Cloud.
+- Tái sử dụng component/theme/scene; mỗi episode có thư mục riêng ở `content/`.
+- Trạng thái tính theo bản ZIP ngày 18/11/2026: hoàn tất thư viện component Phase 3A–3D; **Phase 4–6 chưa triển khai**.
+- Trước mỗi task, đọc **`docs/PROJECT_STATUS.md`** và **`docs/ROADMAP_NEXT_PHASES.md`**; không coi mô tả roadmap là code đã tồn tại.
 
-### Key Directories
-- `docs/`: Ground truth architecture, channel mission, style guidelines, and workflows.
-- `content/`: Episode directories (`content/<episode-slug>/`) with scripts, storyboards, and audio assets.
-- `content/templates/`: Standardized markdown blueprints for new episodes.
-- `src/theme/`: Centralized design system (colors, typography scales, spring animation profiles).
-- `src/components/`: Reusable, atomic visual components (nodes, arrows, cards, terminals).
-- `src/scenes/`: High-level scene containers (Intro, ConceptFlow, Comparison, Outro).
-- `src/compositions/`: Full Remotion compositions (per-episode compositions + `ComponentShowcase`).
-- `.agents/skills/`: Native Remotion skills installed in the repository.
+## 2. Tài liệu chuẩn
 
----
+1. `docs/CHANNEL_BRIEF.md`: định vị và khán giả.
+2. `docs/STYLE_GUIDE.md`: theme và màu, font, geometry.
+3. `docs/ANIMATION_GUIDE.md`: frame-based motion, spring và sequence timing.
+4. `docs/WORKFLOW.md`: pipeline cấp cao.
+5. `docs/VIDEO_PRODUCTION_STEP_BY_STEP.md`: SOP thao tác thực tế **sau khi đã hoàn tất base project**.
+6. `docs/VIDEO_QA_CHECKLIST.md`: nghiệm thu video.
+7. `docs/ASSETS_AND_AUDIO.md`: audio/assets/fonts/license.
+8. `docs/GIT_AND_BACKUP.md`: quản lý phiên bản và media.
+9. `docs/SOP_ORIGINAL.md`: bản SOP người dùng gửi làm tài liệu gốc; nếu khác nhau, báo xung đột rõ ràng thay vì tự ý suy đoán.
 
-## 2. General Agent Rules & Protocol
-1. **Never Reinstall or Overwrite Skills**: Use the existing skills in `.agents/skills/`. Never run commands that overwrite or duplicate them.
-2. **Consult Remotion Skills First**:
-   - For animation timing, springs, and layout: inspect `.agents/skills/remotion-markup`.
-   - For composition structure and parameterization: inspect `.agents/skills/remotion-interactivity`.
-   - For studio preview or command syntax: inspect `.agents/skills/remotion-studio` and `remotion-render`.
-   - For subtitles/captions: inspect `.agents/skills/remotion-captions`.
-3. **Preserve Functional Code**:
-   - Keep the existing 720p sandbox composition in `src/Composition.tsx` intact unless explicitly asked to modify it.
-   - Do not remove or alter existing configuration files (`remotion.config.ts`, `package.json`, `tsconfig.json`) without explicit approval.
-4. **No Unapproved Dependencies**:
-   - Do not install third-party UI libraries (Tailwind, Framer Motion, Radix, etc.). Remotion compositions rely on React, inline styles, CSS-in-JS, or lightweight standard CSS with Remotion spring primitives.
-5. **Standard Output Specifications**:
-   - Production Compositions: `1920 × 1080` (16:9), `30 FPS`.
-   - Palette & Fonts: Strictly adhere to `docs/STYLE_GUIDE.md` and tokens in `src/theme/`.
-6. **Git Discipline**:
-   - Never commit or push without explicit user direction.
-   - Validate TypeScript (`npm run lint` or `npx tsc --noEmit`) before completing any phase.
-   - Summarize created/modified files clearly at the end of every turn.
+## 3. Repo hiện có (không suy diễn)
+
+- `src/theme/`: tokens, layout, fonts, animation configs.
+- `src/components/{typography,ui,diagrams,effects}/`: các thành phần đã có.
+- `src/compositions/ComponentShowcase/index.tsx`: demo 4 segment Phase 3A–3D (600 frames).
+- `src/Composition.tsx`: sandbox cũ; **giữ nguyên** trừ khi có yêu cầu cụ thể.
+- `src/Root.tsx`: đăng ký sandbox + `ComponentShowcase`.
+- `.agents/skills/`: Remotion skills có trong ZIP.
+- `.claude/skills/`: thư mục có nhưng **trống trong ZIP được kiểm tra**; không tuyên bố là symlink hoặc chứa skills nếu chưa kiểm tra lại môi trường thực tế.
+- `src/scenes/`, episode master composition và automation scripts: **chưa triển khai**.
+
+## 4. Protocol cho agent
+
+1. Trước code: đọc các tài liệu phù hợp, kiểm tra source hiện tại, báo rõ phạm vi, file sẽ sửa và rủi ro.
+2. Đọc Remotion skills đã cài trong `.agents/skills/` theo loại nhiệm vụ: `remotion-best-practices`, `remotion-markup`, `remotion-interactivity`, `remotion-studio`, `remotion-render`, `remotion-captions` khi liên quan.
+3. **Không** reinstall hoặc overwrite skills, không thêm dependency hoặc thay đổi kiến trúc lớn nếu chưa được duyệt.
+4. **Không** xóa/sửa `remotion.config.ts`, `package.json`, `tsconfig.json`, sandbox, các phase đã duyệt nếu không liên quan.
+5. Reuse `src/theme/` và các components hiện có. Không hardcode lại palette khi đã có token.
+6. Animation Remotion phải deterministic dựa trên frames; phân biệt frame toàn composition với frame cục bộ bên trong `<Sequence>`.
+7. Mỗi task chỉ làm **một phase hoặc một scene**, luôn có preview và kiểm thử.
+8. Không dùng ảnh, nhạc, font, video hoặc logo không rõ quyền sử dụng; fact-check thông tin kỹ thuật.
+9. Không chạy commit, push, rebase, reset, force push nếu không có yêu cầu trực tiếp.
+10. Khi kết thúc: nêu thay đổi, lệnh đã chạy, kết quả lint/typecheck, các frame đã preview, vấn đề còn tồn tại, `git status` và diff tóm tắt.
+
+## 5. Design / technical standards
+
+- Kích thước production: `1920x1080 @ 30fps` (sandbox có thể khác).
+- Màu theo `src/theme/colors.ts`, font từ `src/theme/fonts.ts`: Inter và JetBrains Mono qua `@remotion/google-fonts`.
+- Safe zone hiện có theo `src/theme/layout.ts`: x = 80px, y = 60px.
+- Cần cân đối bố cục và độ lớn chữ cho thiết bị di động; preview không đủ, phải xem **render thật**.
+- Dùng props rõ nghĩa, strongly typed TypeScript, component tái sử dụng, hạn chế dependency.
+
+## 6. Lệnh kiểm tra đã có
+
+```bash
+npm run dev
+npm run lint
+npx remotion compositions src/index.ts
+```
+
+Chỉ thực hiện `npm ci` khi cần cài dependency trong môi trường mới. Không tái tạo project Blank.
+
+## 7. Workflow review
+
+- Xem diff: `git status --short`, `git diff`, `git diff --cached`.
+- Kiểm tra `npm run lint` (bao gồm `eslint src && tsc` theo package.json hiện tại).
+- Preview Scene ở Remotion Studio; kiểm tra trước/giữa/sau animation, clipping và audio sync.
+- Sau khi được người dùng chấp thuận mới commit/push theo `docs/GIT_AND_BACKUP.md`.

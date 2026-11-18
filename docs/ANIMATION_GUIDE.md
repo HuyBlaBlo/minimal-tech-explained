@@ -1,91 +1,71 @@
-# Animation Guide: Physics, Timing & Remotion Conventions
+# Animation Guide — Remotion Conventions
 
-This document dictates all animation behavior across the video pipeline. Animations must feel mechanical, snappy, and intentional—avoiding sluggish eases or distracting, bouncy cartoon physics.
+All motion should explain a system behavior or guide the viewer's attention. Prefer predictable, restrained transitions over decorative animation.
 
----
+## Rules
 
-## 1. Core Animation Rules
-1. **Never Animate Linearly Without Purpose**: Linear interpolation (`interpolate`) feels robotic and unnatural for spatial motion. Use `spring()` for element entrances and layout transitions, reserving linear solely for continuous background rotations or continuous progress bars.
-2. **Frame-Rate Invariance**: Always compute animations using `fps` from `useVideoConfig()` and `frame` from `useCurrentFrame()`.
-3. **Clamping by Default**: Whenever using `interpolate()`, explicitly specify `{ extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }` to prevent out-of-bounds visual bugs when frames exceed the animation window.
-4. **Staggered Orchestration**: When multiple diagram nodes appear, stagger their entrance by 3 to 6 frames. Simultaneous popping feels flat and overwhelming.
+1. Derive motion from `useCurrentFrame()` and `useVideoConfig()`; keep rendering deterministic.
+2. Reuse `SPRING_PRESETS`, `ANIMATION_DURATIONS`, `EASING_PRESETS` and interpolation helpers from `src/theme/animations.ts`.
+3. Clamp interpolation outside a defined animation window (`extrapolateLeft/Right: "clamp"`).
+4. Use springs for arrivals, scaling and spatial changes. Linear progress is appropriate for fades, constant-speed packets and progress indicators.
+5. Use small, meaningful staggers instead of introducing all nodes together.
+6. Do not use unseeded randomness, `setInterval`, wall-clock timers or CSS keyframe timing for rendered animations.
+7. Preserve an element's position and identity when a diagram changes; avoid resetting the full composition unnecessarily.
 
----
+## Shared spring presets
 
-## 2. Spring Physics Presets
+Use these exported values rather than recreating configs:
 
-All spring physics configs must be shared from `src/theme/animations.ts`.
+| Preset | Damping | Mass | Stiffness | Overshoot clamp | Typical use |
+|---|---:|---:|---:|---|---|
+| `snappy` | 18 | 0.8 | 180 | Yes | Node / card appearance |
+| `smooth` | 24 | 1.0 | 120 | No | Layout changes, camera pans |
+| `gentle` | 30 | 1.2 | 90 | No | Subtle emphasis and reveals |
 
-Remotion's `spring()` takes `{ frame, fps, config }`. We utilize three standardized physics profiles:
+At 30 FPS, `ANIMATION_DURATIONS` provides a starting point: 4-frame stagger, 12-frame pop-in, 15-frame normal transition, 15-frame scene transition, and 12/24/45-frame packet movements. These are **design defaults, not network latency measurements**.
 
-```typescript
-export const SPRING_PRESETS = {
-  // Snappy: For cards, badges, nodes, and UI pop-ins. Zero overshoot.
-  snappy: {
-    damping: 18,
-    mass: 0.8,
-    stiffness: 180,
-    overshootClamping: true,
-  },
+## Effect behavior
 
-  // Smooth: For position slides, camera pans, and large layout shifts.
-  smooth: {
-    damping: 24,
-    mass: 1.0,
-    stiffness: 120,
-    overshootClamping: false,
-  },
+| Effect | Expected behavior |
+|---|---|
+| `FadeIn` | Opacity 0 → 1, then stays visible |
+| `FadeOut` | Opacity 1 → 0, then stays hidden |
+| `ScaleIn` | Slightly smaller → full size, optional fade |
+| `Pulse` | Subtle repeated emphasis for active objects |
+| `Glow` | Highlight an active or important system element |
+| `Shake` | Brief damped feedback for errors; ends at zero offset |
+| `Highlight` | Draw attention to one region without concealing neighbors |
 
-  // Gentle: For subtle fade/scale reveals, tooltips, or glow effects.
-  gentle: {
-    damping: 30,
-    mass: 1.2,
-    stiffness: 90,
-    overshootClamping: false,
-  },
-} as const;
-```
+Do not let effects cause unwanted layout shifts, hide essential labels or compete with narration.
 
----
+## Nodes, connections and packets
 
-## 3. Motion Patterns for Technical Diagrams
+- Introduce architecture nodes in the order the narration mentions them.
+- Draw or reveal connection paths before moving a packet along them.
+- Packet position must match the actual SVG path, including bends and return paths.
+- Keep connection labels readable at all times, including while packets pass.
+- Visually distinguish success, warning, failure and recovery through consistent semantic colors.
+- In a failure scene, clearly depict the cause, affected node, failed request and resulting response or retry (only if technically accurate for the chosen system).
 
-### A. Node Entrances (Scale + Fade + Slight Y-Shift)
-- **Start**: `scale: 0.85`, `opacity: 0`, `translateY: 20px`.
-- **Target**: `scale: 1.0`, `opacity: 1`, `translateY: 0px`.
-- **Physics**: `SPRING_PRESETS.snappy`.
-- **Duration**: Resolves in ~12–15 frames (0.4 – 0.5s at 30fps).
+## Timeline and `Sequence`
 
-### B. Packet / Request Transmission
-- Packets traveling along lines between nodes use `interpolate(frame, [startFrame, endFrame], [0, 1])` mapped to the SVG path stroke or X/Y coordinates.
-- **Timing**:
-  - Fast network call (e.g., local cache hit): 10–15 frames.
-  - Normal RPC/HTTP network call: 20–30 frames.
-  - Slow/Bottlenecked roundtrip: 45+ frames with trailing pulse.
+Inside Remotion's `<Sequence from={...}>`, `useCurrentFrame()` is **relative to the Sequence**, not necessarily the composition's global timeline. Define clearly whether any prop such as `startFrame` is local or global; convert deliberately if needed.
 
-### C. State Transitions (Healthy ➔ Overloaded / Down)
-- Interpolate border color and glow over 8–10 frames.
-- Node shake effect for failure:
-  ```typescript
-  const shake = Math.sin(frame * 1.5) * intensity; // where intensity fades from 8px to 0
-  ```
+For every timed effect, test at three local frames: **before**, **midway**, **after**. For `FadeOut`, opacity should be approximately **1 / 0.5 / 0**. Check that its post-animation state is maintained. `visibility: hidden` does not remove the wrapper's space from layout.
 
-### D. Camera & Focus Shifting
-- In a complex distributed system, we zoom into subsystems (e.g., zooming from cluster overview into a single node's internal thread pool).
-- Animate wrapper container:
-  - `transform: scale(${zoom}) translate(${panX}px, ${panY}px)`
-  - Use `SPRING_PRESETS.smooth` across 30–45 frames.
+If using `TransitionSeries`, account for overlap when calculating total composition duration.
 
----
+## Scene timing and narration
 
-## 4. Scene Transitions
-- **Cuts vs. Morphs**:
-  - For continuous system evolution (e.g., adding a cache to an existing database architecture), do NOT hard-cut. Keep existing nodes mounted and smoothly transition positions with `spring()`.
-  - For distinct conceptual sections (Hook ➔ Problem ➔ Solution ➔ Outro), use clean cross-fades or slide transitions using Remotion's `<TransitionSeries>` (e.g., slide or fade with duration 12–15 frames).
+- Draft scene durations from the script, then adapt to the measured voice-over.
+- Sync node reveal, packet movement and labels to actual narration cues.
+- If a diagram needs more explanation time, extend that scene; do not rush the voice to match arbitrary frames.
+- Keep transitions short enough that they do not delay the explanation.
 
----
+## Validation
 
-## 5. Performance Best Practices in Remotion
-- Avoid calculating expensive layout mathematics inside inline render loops.
-- Use CSS `transform` (GPU-accelerated `translate3d`, `scale`) and `opacity` rather than animating `top`, `left`, `width`, or `height`.
-- For complex node graphs, keep SVG vector rendering efficient: use `<svg>` with pre-calculated paths.
+- `npm run lint` passes.
+- Studio Play and timeline scrubbing produce the same result at a given frame.
+- Check the first, middle, last and boundary frames of each scene.
+- No clipping, flashing, drifting packets, unexpected fades or overlap.
+- The final video is inspected after render, not only in Studio.

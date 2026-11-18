@@ -71,6 +71,24 @@ export const SEMANTIC_COLORS = {
     accent: BASE_COLORS.secondary,
     glow: "rgba(140, 168, 255, 0.2)",
   },
+  queueNode: {
+    bg: BASE_COLORS.surface,
+    border: BASE_COLORS.warning,
+    accent: BASE_COLORS.warning,
+    glow: "rgba(245, 192, 99, 0.25)",
+  },
+  apiNode: {
+    bg: BASE_COLORS.surface,
+    border: BASE_COLORS.secondary,
+    accent: BASE_COLORS.secondary,
+    glow: "rgba(140, 168, 255, 0.25)",
+  },
+  cloudNode: {
+    bg: BASE_COLORS.surface,
+    border: BASE_COLORS.primary,
+    accent: BASE_COLORS.primary,
+    glow: "rgba(125, 227, 209, 0.2)",
+  },
 
   // Connection Lines & Wires
   connectionLine: {

@@ -1,42 +1,71 @@
-# Episode Metadata: [Topic Name]
+# YouTube Metadata — [Video Topic]
 
-## YouTube Publishing Details
+- **Episode ID:** [NNN-topic]
+- **Final video:** `out/[NNN-topic]-final.mp4`
+- **Subtitles:** `content/[NNN-topic]/[NNN-topic].srt`
+- **Thumbnail:** [Path to 1280×720 image]
+- **Status:** Draft / Ready to publish / Published
 
-### Title Options
-1. **Option A (High CTR / Question)**: [e.g., Why Consistent Hashing Powers Modern Distributed Systems]
-2. **Option B (Direct / Educational)**: [e.g., Consistent Hashing Explained in 4 Minutes]
-3. **Option C (Problem / Outcome)**: [e.g., How Big Tech Distributes Millions of Requests Without Crashing]
+## Title ideas
 
----
+1. [Clear title idea]
+2. [Alternative]
+3. [Alternative]
+4. [Alternative]
+5. [Alternative]
 
-### Description
+**Selected title:** [Final title]
+
+## Description (English, ready for YouTube after review)
+
+[In 1–2 sentences, explain exactly what viewers will learn.]
+
+In this video:
+- [Key point 1]
+- [Key point 2]
+- [Key point 3]
+
+### Chapters
+
+*Enter timestamps from the final exported video, not the draft storyboard.*
+
 ```text
-In this video, we break down [Topic Name]—how it works under the hood, why naive solutions fail at scale, and how modern distributed systems implement it.
-
-Timestamps:
-0:00 The Scaling Bottleneck
-0:35 Why Simple Solutions Break
-1:15 How [Topic] Works Step-by-Step
-2:45 Trade-offs in Production
-3:45 3 Core Takeaways
-
-Resources & References:
-- [Link 1]
-- [Link 2]
-
-#systemdesign #backend #softwareengineering #distributedsystems
+0:00 [Hook title]
+[mm:ss] [Problem]
+[mm:ss] [Core explanation]
+[mm:ss] [Request flow]
+[mm:ss] [Trade-offs]
+[mm:ss] [Takeaway]
 ```
 
----
+### Sources and further reading
 
-### Tags & Keywords
-```text
-system design, backend engineering, software architecture, distributed systems, [topic keyword 1], [topic keyword 2], remotion explainer
-```
+- [Official documentation URL]
+- [Technical reference URL]
 
----
+### Attribution (only if required)
 
-### Thumbnail Concept
-- **Background**: Canvas dark `#0B171A`.
-- **Focal Diagram**: Simplified high-contrast node diagram with `#7DE3D1` (Mint) and `#B79AF7` (Violet).
-- **Text Overlay (Max 3 words, JetBrains Mono / Inter Bold)**: e.g., `CONSISTENT HASHING` or `HOW TO SCALE`.
+- [Asset / author / license / URL, or "No external attribution required"]
+
+## Keywords / tags
+
+[Relevant, natural keywords; avoid stuffing]
+
+## Thumbnail direction
+
+- **Main visual:** [One clear idea]
+- **Text (optional):** [Short phrase]
+- **Color direction:** Dark background with mint/blue/violet accents
+- **Asset / licensing notes:** [Details]
+
+## Pinned comment (optional)
+
+[One useful question or clarification for viewers.]
+
+## Upload checks
+
+- [ ] Title and thumbnail accurately reflect the video.
+- [ ] Chapters match the final MP4.
+- [ ] Technical links and credits are correct.
+- [ ] Subtitles are checked.
+- [ ] Visibility / audience settings and copyright review are complete.

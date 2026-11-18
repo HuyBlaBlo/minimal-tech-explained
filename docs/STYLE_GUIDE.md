@@ -1,86 +1,69 @@
-# Style Guide: Minimalist Dark Technical Explainer
+# Style Guide — Minimalist Tech Explainer
 
-This document outlines the visual system, color palette, typography, and diagram standards for all Remotion video productions in this channel.
+Use this guide for all compositions, scenes, diagrams, titles, UI panels and thumbnails. Reuse the tokens defined in `src/theme/`; do not duplicate values in components.
 
----
+## Canvas and layout
 
-## 1. Design Principles
-1. **Developer Dark Aesthetic**: Deep oceanic-slate backgrounds with luminous, high-contrast cyan, violet, and lavender accents.
-2. **Intentional Minimalism**: Avoid superfluous decoration, heavy gradients, or visual noise. Whitespace (empty dark canvas) isolates focus.
-3. **Structured Geometry**: Diagram nodes are crisp rounded cards (border radius 8px to 16px) with clean, subtle outlines.
-4. **Color as Function**: Colors strictly convey semantic states (e.g., green for healthy/success, red for dropped packets/errors, cyan for incoming requests, violet for database/storage).
+- Production canvas: **1920 × 1080**, **30 FPS**, **16:9**.
+- Safe margins: **80px horizontal** and **60px vertical**, as defined by `LAYOUT.safeZone` in `src/theme/layout.ts`.
+- Maintain consistent visual alignment and gaps. Keep labels, nodes, packets and arrowheads inside their containers.
+- Prefer left-to-right layouts for request flows; use top-to-bottom layouts for hierarchy or secondary paths.
+- Empty space is useful for focus, but avoid large unexplained dead zones in final video scenes.
 
----
+## Color palette
 
-## 2. Color Palette
+All values below are defined in `src/theme/colors.ts`.
 
-All color values are defined and exported in `src/theme/colors.ts`.
-
-| Token Name | Hex Code | Description & Usage |
+| Token | Hex | Use |
 |---|---|---|
-| `bg` | `#0B171A` | Canvas canvas background; ultra-dark slate/teal hue. |
-| `surface` | `#14272B` | Card, container, and diagram node background. |
-| `surfaceHover` | `#1E383E` | Highlighted cards or active step containers. |
-| `border` | `#234147` | Subtle border for default nodes and dividers. |
-| `borderActive` | `#7DE3D1` | Active, selected, or focused node border. |
-| `primary` | `#7DE3D1` | Mint / Cyan. Used for primary flow paths, request packets, active highlights. |
-| `secondary` | `#8CA8FF` | Soft Blue. Used for networking layers, clients, and protocols. |
-| `accent` | `#B79AF7` | Violet / Lavender. Used for databases, storage nodes, internal state, hashing rings. |
-| `text` | `#F2F5F5` | Primary text; off-white high contrast readability. |
-| `muted` | `#9BAEB0` | Secondary labels, timestamps, metadata, inactive links. |
-| `error` | `#F07878` | Coral Red. Dropped packets, 5xx server errors, dead nodes, bottlenecks. |
-| `success` | `#8BE0A7` | Spring Green. 200 OK, healthy clusters, quorum achieved, cache hit. |
-| `warning` | `#F5C063` | Amber. Throttled requests, degrading state, high load alerts. |
+| `BASE_COLORS.background` | `#0B171A` | Main canvas |
+| `BASE_COLORS.surface` | `#14272B` | Cards and nodes |
+| `BASE_COLORS.surfaceHover` | `#1E383E` | Raised / highlighted surfaces |
+| `BASE_COLORS.surfaceSubtle` | `#0F1F23` | Code / terminal surfaces |
+| `BASE_COLORS.primary` | `#7DE3D1` | Primary request flow, active highlights |
+| `BASE_COLORS.secondary` | `#8CA8FF` | Clients, networking, secondary flows |
+| `BASE_COLORS.accent` | `#B79AF7` | Databases and storage concepts |
+| `BASE_COLORS.text` | `#F2F5F5` | Primary text |
+| `BASE_COLORS.muted` | `#9BAEB0` | Secondary information |
+| `BASE_COLORS.success` | `#8BE0A7` | Healthy / success |
+| `BASE_COLORS.warning` | `#F5C063` | Warning / overload |
+| `BASE_COLORS.error` | `#F07878` | Failure / dropped requests |
 
-### Color Rules:
-- The background (`#0B171A`) must remain consistent across all videos.
-- Never use pure black (`#000000`) or pure white (`#FFFFFF`).
-- High-visibility accents (`primary`, `secondary`, `accent`) should account for no more than 10–15% of screen area at any given moment to preserve visual focus.
+Use `SEMANTIC_COLORS` for borders, node types, status indicators, connections and packets rather than manually assigning unrelated colors. Reserve bright colors for the information viewers should notice.
 
----
+## Typography
 
-## 3. Typography
+- **Inter:** scene titles, subtitles, body, card names.
+- **JetBrains Mono:** commands, code, IP addresses, protocol labels, metrics.
+- Fonts are loaded through `src/theme/fonts.ts` using `@remotion/google-fonts`; import and reuse `FONT_FAMILIES` / `TYPOGRAPHY_PRESETS`.
+- Use the configured `FONT_SIZES` as defaults: scene title 56px, heading 44px, subheading 36px, body 24px, label 18px, code 20px, badge 14px.
+- Use fewer words on screen. Avoid tiny fonts for essential information; enlarge important connection labels when necessary.
+- Test at reduced playback size to approximate mobile viewing.
 
-| Role | Font Family | Weight | Recommended Size (1080p) | Line Height |
-|---|---|---|---|---|
-| **Scene Title** | `Inter`, sans-serif | 700 (Bold) | 52px – 64px | 1.1 |
-| **Section Header** | `Inter`, sans-serif | 600 (SemiBold) | 36px – 44px | 1.2 |
-| **Body / Explainer** | `Inter`, sans-serif | 400 / 500 (Medium) | 24px – 28px | 1.4 |
-| **Node Label** | `Inter`, sans-serif | 600 (SemiBold) | 20px – 24px | 1.2 |
-| **Code / Metrics / Hash** | `JetBrains Mono`, monospace | 500 / 700 | 18px – 24px | 1.4 |
-| **Badge / Tag** | `JetBrains Mono`, monospace | 600 (SemiBold) | 14px – 16px | 1.0 |
+## Components and diagrams
 
-*Note: If local system fonts are not bundled, clean Google Fonts / Web font fallbacks (`monospace`, `sans-serif`) must gracefully maintain layout dimensions without reflow.*
+- Reuse existing `SceneTitle`, `Label`, `InfoCard`, `Badge`, `CodePanel`, node, connection, packet and effect components.
+- Diagram nodes: dark rounded card, semantic border, recognizable icon, short title, optional secondary line.
+- Keep connections attached to **node boundaries**, not through the centers of nodes or text.
+- Arrowheads should clearly indicate request versus response direction. Labels must not cover paths or moving packets.
+- For error flows, show **where the failure occurs** and **what happens to the response**, not only a red border.
+- Use restrained glows/shadows; effects must not obscure text.
+- The diagram can evolve between scenes, but preserve node identities and colors so viewers can follow it.
 
----
+## Code and terminal panels
 
-## 4. UI & Diagram Components
+- Use a dark surface with high-contrast JetBrains Mono.
+- Preserve indentation and whitespace.
+- Show only the lines needed for the current explanation.
+- Prefer original example code or carefully attributed snippets; never fabricate a real command/output as factual evidence.
 
-### A. Diagram Nodes (Client, Server, Database, Cache, Load Balancer)
-- **Border**: `1.5px` or `2px` solid `#234147`.
-- **Corner Radius**: `12px`.
-- **Background**: `#14272B`.
-- **Shadow / Glow**: Subtle inner glow or diffuse drop-shadow (`0 8px 24px rgba(0, 0, 0, 0.4)`). Active nodes emit a faint colored glow (`box-shadow: 0 0 20px rgba(125, 227, 209, 0.25)`).
-- **Padding**: `16px 24px` standard.
-- **Node Anatomy**:
-  - Top row: Semantic Icon + Node Type Badge (`LB`, `DB`, `SRV-01`).
-  - Center: Entity Name / Title.
-  - Optional footer: State, IP address, or active connection metric in `JetBrains Mono`.
+## Thumbnail direction
 
-### B. Connection Lines & Animated Arrows
-- **Default Wire**: `2px` dashed or solid `#234147`.
-- **Active Transmission**: `2px` or `3px` solid `#7DE3D1` or `#8CA8FF`.
-- **Packet Flow**: Small pills or glowing dots (`width: 12px, height: 12px`, border-radius 50%) traveling along paths from source to target.
+- 1280 × 720, 16:9; one simple visual idea with a clear focal point.
+- High contrast and limited text (ideally 2–4 words, if any).
+- Match the channel palette, but thumbnail legibility takes priority over exact in-video layout.
+- Use original diagrams and properly licensed assets.
 
-### C. Terminal / Code Windows
-- **Header**: Minimal 3 dots (`#F07878`, `#F5C063`, `#8BE0A7`) or window title.
-- **Background**: `#0F1D21` (slightly darker than standard cards).
-- **Border**: `1px solid #234147`.
-- **Syntax Highlighting**: Restricted to palette tokens (`#7DE3D1` for keywords, `#8CA8FF` for functions/variables, `#B79AF7` for types/strings, `#9BAEB0` for comments).
+## Visual acceptance check
 
----
-
-## 5. Composition Layout Grids
-- **Canvas Size**: 1920 × 1080.
-- **Safe Zone**: 80px horizontal and vertical padding. No critical diagram nodes or subtitles should touch the outer 80px boundary.
-- **Alignment**: Central-anchored flow (e.g. Left-to-Right dataflow: Client ➔ Gateway ➔ Services ➔ Database) or Top-to-Bottom hierarchy.
+Before approving a scene: verify typography, safe zones, spacing, node geometry, arrow direction, packet alignment, contrast, clipping, and mobile readability. Always inspect the rendered MP4 before publishing.
