@@ -23,6 +23,13 @@ import {
   Connection,
   AnimatedArrow,
   Packet,
+  FadeIn,
+  FadeOut,
+  ScaleIn,
+  Pulse,
+  Glow,
+  Shake,
+  Highlight,
 } from "../../components";
 
 export const ComponentShowcase: React.FC = () => {
@@ -636,7 +643,288 @@ node = get_node("session:user_8912")`}
 
             <div style={{ display: "flex", gap: SPACING.md, alignItems: "center" }}>
               <Label mono size="badge" variant="secondary">
-                PART 3/3: END-TO-END FLOW (FRAMES 300-450)
+                PART 3/4: END-TO-END FLOW (FRAMES 300-450)
+              </Label>
+              <Label mono size="badge" variant="primary">
+                FRAME: {frame}
+              </Label>
+            </div>
+          </div>
+        </div>
+      </Sequence>
+
+      {/* =========================================================================
+          SEGMENT 4 (Frames 450 - 600): Phase 3D Reusable Animation Effects
+          Demonstrates: FadeIn, FadeOut, ScaleIn, Pulse, Glow, Shake, Highlight
+          ========================================================================= */}
+      <Sequence from={450} durationInFrames={150}>
+        <div
+          style={{
+            position: "relative",
+            width: "100%",
+            height: "100%",
+            padding: `${LAYOUT.safeZone.y}px ${LAYOUT.safeZone.x}px`,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            boxSizing: "border-box",
+          }}
+        >
+          {/* Top: SceneTitle */}
+          <SceneTitle
+            title="Phase 3D: Reusable Animation Effects Library"
+            subtitle="Deterministic frame-based primitives: Fade, Scale, Pulse, Glow, Shake & Highlight"
+            animated
+            startFrame={0}
+          />
+
+          {/* Effects Matrix Grid */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: SPACING.xl,
+              marginTop: SPACING.md,
+              marginBottom: SPACING.md,
+              alignItems: "center",
+            }}
+          >
+            {/* Effect 1: FadeIn & FadeOut */}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: SPACING.sm,
+                backgroundColor: BASE_COLORS.surface,
+                padding: SPACING.lg,
+                borderRadius: 14,
+                border: `1px solid ${BASE_COLORS.surfaceHover}`,
+                minHeight: 220,
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <Label mono size="badge" variant="primary">
+                  1 & 2. FADE-IN / FADE-OUT
+                </Label>
+                <Badge label="OPACITY + Y" state="primary" variant="subtle" />
+              </div>
+              <Label size="body" variant="muted">
+                Smooth linear entrance & exit transitions with clamped coordinates.
+              </Label>
+
+              <div style={{ display: "flex", gap: SPACING.md, marginTop: "auto" }}>
+                {/* Enters at frame 15, duration 25 */}
+                <FadeIn startFrame={15} durationInFrames={25} translateY={15} style={{ flex: 1 }}>
+                  <Badge label="ENTRANCE FADE" state="success" variant="solid" style={{ width: "100%" }} />
+                </FadeIn>
+
+                {/* Exits at frame 60, duration 35 (disappears completely by frame 95) */}
+                <FadeOut startFrame={60} durationInFrames={35} translateY={-15} style={{ flex: 1 }}>
+                  <Badge label="EXIT FADE" state="error" variant="solid" style={{ width: "100%" }} />
+                </FadeOut>
+              </div>
+            </div>
+
+            {/* Effect 2: ScaleIn (Spring Physics) */}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: SPACING.sm,
+                backgroundColor: BASE_COLORS.surface,
+                padding: SPACING.lg,
+                borderRadius: 14,
+                border: `1px solid ${BASE_COLORS.surfaceHover}`,
+                minHeight: 220,
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <Label mono size="badge" variant="secondary">
+                  3. SCALE-IN (SPRING)
+                </Label>
+                <Badge label="SNAPPY SPRING" state="secondary" variant="subtle" />
+              </div>
+              <Label size="body" variant="muted">
+                Zero-overshoot snappy pop-in entrance using Remotion spring physics.
+              </Label>
+
+              <div style={{ marginTop: "auto" }}>
+                <ScaleIn startFrame={20} initialScale={0.75}>
+                  <InfoCard
+                    title="Snappy Scale Pop"
+                    description="Ideal for alerts and node pop-ins."
+                    accentColor={BASE_COLORS.secondary}
+                    style={{ padding: `${SPACING.md}px ${SPACING.lg}px` }}
+                  />
+                </ScaleIn>
+              </div>
+            </div>
+
+            {/* Effect 3: Pulse (Continuous breathing) */}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: SPACING.sm,
+                backgroundColor: BASE_COLORS.surface,
+                padding: SPACING.lg,
+                borderRadius: 14,
+                border: `1px solid ${BASE_COLORS.surfaceHover}`,
+                minHeight: 220,
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <Label mono size="badge" variant="primary">
+                  4. PULSE (BREATHING)
+                </Label>
+                <Badge label="1HZ SINUSOID" state="primary" variant="subtle" />
+              </div>
+              <Label size="body" variant="muted">
+                Frame-based harmonic oscillation for active clusters and servers.
+              </Label>
+
+              <div style={{ marginTop: "auto", display: "flex", justifyContent: "center" }}>
+                <Pulse intensity={0.05} speedMultiplier={1.2}>
+                  <ServerNode
+                    label="Primary Cluster"
+                    sublabel="Active Heartbeat"
+                    state="active"
+                    width={260}
+                  />
+                </Pulse>
+              </div>
+            </div>
+
+            {/* Effect 4: Glow (Subtle halo) */}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: SPACING.sm,
+                backgroundColor: BASE_COLORS.surface,
+                padding: SPACING.lg,
+                borderRadius: 14,
+                border: `1px solid ${BASE_COLORS.surfaceHover}`,
+                minHeight: 220,
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <Label mono size="badge" variant="accent">
+                  5. GLOW (LUMINOUS)
+                </Label>
+                <Badge label="PULSE GLOW" state="secondary" variant="subtle" />
+              </div>
+              <Label size="body" variant="muted">
+                Multi-radius drop-shadow bloom around critical entities without clipping.
+              </Label>
+
+              <div style={{ marginTop: "auto", display: "flex", justifyContent: "center" }}>
+                <Glow color={BASE_COLORS.accent} radius={28} intensity={0.7} pulseGlow>
+                  <DatabaseNode
+                    label="Distributed Storage"
+                    sublabel="Luminous Raft Leader"
+                    state="default"
+                    accentColor={BASE_COLORS.accent}
+                    width={260}
+                  />
+                </Glow>
+              </div>
+            </div>
+
+            {/* Effect 5: Shake (Damped error vibration) */}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: SPACING.sm,
+                backgroundColor: BASE_COLORS.surface,
+                padding: SPACING.lg,
+                borderRadius: 14,
+                border: `1px solid ${BASE_COLORS.surfaceHover}`,
+                minHeight: 220,
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <Label mono size="badge" variant="error">
+                  6. SHAKE (DAMPED ERROR)
+                </Label>
+                <Badge label="DAMPED DECAY" state="error" variant="subtle" />
+              </div>
+              <Label size="body" variant="muted">
+                Damped horizontal error shake decaying smoothly to 0 over 25 frames.
+              </Label>
+
+              <div style={{ marginTop: "auto", display: "flex", justifyContent: "center" }}>
+                {/* Shake triggers periodically or at frame 30 */}
+                <Shake startFrame={25} durationInFrames={30} amplitude={12} frequency={1.8}>
+                  <ClientNode
+                    label="Crash Detected"
+                    sublabel="503 Service Outage"
+                    state="error"
+                    width={260}
+                  />
+                </Shake>
+              </div>
+            </div>
+
+            {/* Effect 6: Highlight (Halo ring callout) */}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: SPACING.sm,
+                backgroundColor: BASE_COLORS.surface,
+                padding: SPACING.lg,
+                borderRadius: 14,
+                border: `1px solid ${BASE_COLORS.surfaceHover}`,
+                minHeight: 220,
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <Label mono size="badge" variant="warning">
+                  7. HIGHLIGHT (CALLOUT)
+                </Label>
+                <Badge label="FOCUS RING" state="warning" variant="subtle" />
+              </div>
+              <Label size="body" variant="muted">
+                Expanding halo boundary to emphasize components during voiceover cues.
+              </Label>
+
+              <div style={{ marginTop: "auto", display: "flex", justifyContent: "center" }}>
+                <Highlight startFrame={15} durationInFrames={120} color={BASE_COLORS.warning} borderWidth={2}>
+                  <CacheNode
+                    label="Critical Hotkey"
+                    sublabel="High Memory Alert"
+                    state="warning"
+                    width={260}
+                  />
+                </Highlight>
+              </div>
+            </div>
+          </div>
+
+          {/* Footer bar */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              borderTop: `1px solid ${BASE_COLORS.surfaceHover}`,
+              paddingTop: SPACING.md,
+            }}
+          >
+            <div style={{ display: "flex", gap: SPACING.md, alignItems: "center" }}>
+              <Label mono size="badge" variant="muted">
+                EFFECT LIBRARY:
+              </Label>
+              <Badge label="DETERMINISTIC" state="success" variant="subtle" />
+              <Badge label="NO CSS KEYFRAMES" state="primary" variant="subtle" />
+              <Badge label="ZERO DRIFT" state="secondary" variant="subtle" />
+            </div>
+
+            <div style={{ display: "flex", gap: SPACING.md, alignItems: "center" }}>
+              <Label mono size="badge" variant="secondary">
+                PART 4/4: REUSABLE EFFECTS (FRAMES 450-600)
               </Label>
               <Label mono size="badge" variant="primary">
                 FRAME: {frame}
