@@ -9,11 +9,11 @@ export const RemotionRoot: React.FC = () => {
       {/* Preserved sandbox composition */}
       <MyComposition />
 
-      {/* Reusable Component Preview Composition (Phase 3A & 3B) */}
+      {/* Reusable Component Preview Composition (Phase 3A, 3B & 3C) */}
       <Composition
         id="ComponentShowcase"
         component={ComponentShowcase}
-        durationInFrames={300}
+        durationInFrames={450}
         fps={LAYOUT.fps}
         width={LAYOUT.width}
         height={LAYOUT.height}
