@@ -12,12 +12,11 @@
 
 import React from "react";
 import { BASE_COLORS } from "./colors";
+import { LOADED_FONTS } from "./fonts";
 
 export const FONT_FAMILIES = {
-  primary:
-    "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-  code:
-    "'JetBrains Mono', 'Fira Code', 'SF Mono', Menlo, Monaco, Consolas, 'Liberation Mono', monospace",
+  primary: `${LOADED_FONTS.inter}, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif`,
+  code: `${LOADED_FONTS.jetBrainsMono}, 'Fira Code', 'SF Mono', Menlo, Monaco, Consolas, 'Liberation Mono', monospace`,
 } as const;
 
 export const FONT_WEIGHTS = {
