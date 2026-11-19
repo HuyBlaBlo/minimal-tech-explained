@@ -1,126 +1,123 @@
-# Minimal Tech Explainer — Remotion Production System
+# Minimal Tech Explainer
 
-> Project dùng chung để sản xuất video YouTube faceless bằng tiếng Anh về System Design, Backend, Networking, Databases, Distributed Systems và Cloud. **Không tạo project Remotion mới cho mỗi video.**
+Project **React + TypeScript + Remotion** dùng chung để sản xuất video YouTube **faceless bằng tiếng Anh** về System Design, Backend, Networking, Databases và Cloud Computing.
 
-## 1. Trạng thái hiện tại
+- **Định dạng:** 1920 × 1080, 30 FPS, 16:9.
+- **Thời lượng mục tiêu:** 3–5 phút/video.
+- **Phong cách:** Dark minimalist, sơ đồ hệ thống và motion graphics.
+- **Nguyên tắc:** Một project cho cả kênh; mỗi video có nội dung riêng và tái sử dụng thư viện component.
 
-- Stack trong bản ZIP ngày **18/11/2026**: React 19.3.1, Remotion 4.0.545, TypeScript 5.9.3, Rspack, `@remotion/google-fonts`.
-- Đã có: theme; `SceneTitle`, `Label`, `InfoCard`, `Badge`, `CodePanel`; 8 system nodes; arrows/connections/packets; 7 hiệu ứng; `ComponentShowcase`.
-- `ComponentShowcase`: **1920 × 1080, 30 FPS, 600 frames = 20 giây**. Composition sandbox cũ vẫn được giữ.
-- **Chưa có** scene templates sản xuất video, master composition từng tập, hoặc scripts tự động hóa audio/subtitle/export. Đó là Phase 4–6.
-- Xem [PROJECT_STATUS](docs/PROJECT_STATUS.md) để biết chính xác việc gì đã làm, việc gì chưa làm.
+## 1. Cài đặt và chạy project
 
-## 2. Yêu cầu môi trường
+Yêu cầu: Node.js tương thích với `package.json`, npm và Git.
 
-- Node.js phù hợp với `engines` trong `package.json`: `^20.19.0 || ^22.13.0 || >=24`.
-- npm, Git, trình duyệt để xem Remotion Studio.
-- Môi trường đang sử dụng: Arch Linux, Antigravity là coding agent chính. **Không bắt buộc Claude Pro**.
-- Tùy bước: Audacity (thu WAV), Kdenlive (dựng âm thanh/video), Faster-Whisper (tạo SRT).
-
-## 3. Chạy project hiện tại
-
-Mở terminal **ở thư mục gốc có `package.json`**:
+Mở terminal tại thư mục gốc của project (nơi chứa `package.json`):
 
 ```bash
+# Cài dependency khi thiết lập môi trường lần đầu
 npm ci
+
+# Mở Remotion Studio
 npm run dev
 ```
 
-Mở đường dẫn hiện trong terminal, chọn **ComponentShowcase** ở Remotion Studio, nhấn Play hoặc kéo timeline.
+Mở đường dẫn do terminal hiển thị. Trong Remotion Studio, chọn composition cần xem (ví dụ: `ComponentShowcase`) và nhấn **Play** hoặc kéo timeline.
 
-Kiểm tra mã nguồn:
+Kiểm tra ESLint và TypeScript:
 
 ```bash
 npm run lint
 ```
 
-Liệt kê composition (chạy tại thư mục gốc):
+## 2. Cấu trúc project
+
+```text
+minimal-tech-explainer/
+├── AGENTS.md                    # Quy tắc làm việc cho coding agents
+├── CLAUDE.md                    # Hướng dẫn bổ sung cho Claude Code
+├── docs/                        # Quy chuẩn hình ảnh và hướng dẫn sản xuất
+├── content/
+│   ├── templates/               # Mẫu research, script, storyboard, metadata...
+│   └── NNN-topic/               # Nội dung riêng của từng video
+├── src/
+│   ├── theme/                   # Màu, font, spacing, animation tokens
+│   ├── components/              # Node, connection, text, UI và effects
+│   ├── compositions/            # Composition được đăng ký trong Root.tsx
+│   ├── Root.tsx                 # Danh sách composition
+│   └── index.ts                 # Remotion entrypoint
+├── public/                      # Media được đưa vào Remotion bằng staticFile()
+└── out/                         # File render (không đưa lên Git)
+```
+
+Một số thư mục như `content/NNN-topic/` chỉ được tạo khi làm tập mới. Không cần tạo trước toàn bộ thư mục trống.
+
+## 3. Quy trình làm một video mới
+
+**Bắt đầu từ:** [Hướng dẫn từng bước](docs/VIDEO_PRODUCTION_STEP_BY_STEP.md).
+
+1. **Chọn chủ đề, tạo thư mục tập** dưới `content/` và sao chép các file mẫu từ `content/templates/`.
+2. **Nghiên cứu và kiểm chứng** nội dung kỹ thuật; lưu nguồn trong `research.md`.
+3. **Viết kịch bản tiếng Anh**, đọc thử và chốt nội dung trong `script.md`.
+4. **Làm storyboard**: chia scene, chỉ định lời thoại, hình minh họa và thời lượng dự kiến.
+5. **Tạo từng scene bằng Remotion**: dùng component sẵn có, preview và sửa trước khi làm scene tiếp theo.
+6. **Thu voice-over**, ghi thời lượng thực tế và đồng bộ animation với giọng đọc.
+7. **Hoàn thiện âm thanh**, nhạc/SFX, phụ đề; render và xem lại toàn bộ MP4.
+8. **Chuẩn bị thumbnail, metadata**, kiểm tra chất lượng và đăng YouTube.
+
+Ví dụ thư mục một tập:
+
+```text
+content/001-load-balancer/
+├── research.md
+├── script.md
+├── storyboard.md
+├── metadata.md
+├── assets-license.md
+├── qa.md
+├── analytics.md
+├── voice/
+└── assets/
+```
+
+File trong `content/` lưu nội dung và tài nguyên nguồn của tập. Nếu muốn Remotion đọc media bằng `staticFile()`, đặt bản cần render vào `public/` theo đường dẫn phù hợp.
+
+## 4. Xem và render video
+
+Liệt kê các composition đã đăng ký:
 
 ```bash
 npx remotion compositions src/index.ts
 ```
 
-Render **showcase để kiểm thử** (không phải video YouTube đầu tiên):
+Render thử composition có sẵn:
 
 ```bash
 mkdir -p out
 npx remotion render src/index.ts ComponentShowcase out/component-showcase.mp4
 ```
 
-Lưu ý: Remotion CLI cần Chrome/Chromium phù hợp để render headless. Nếu lỗi tải browser, xem tài liệu Remotion và cấu hình môi trường trước; không tự ý đổi stack.
+Khi sản xuất video thật, thay `ComponentShowcase` bằng **Composition ID thực tế** được đăng ký trong `src/Root.tsx`, rồi chọn tên file đầu ra tương ứng.
 
-## 4. Cấu trúc project
+Trước khi xuất bản, kiểm tra độ phân giải, FPS, voice-over, âm lượng, lỗi font, clipping, animation và phụ đề trên **file MP4 cuối cùng** — không chỉ trong Studio.
 
-```text
-minimal-tech-explainer/
-├── AGENTS.md                    # Quy tắc dùng chung cho coding agents
-├── CLAUDE.md                    # Hướng dẫn cho Claude Code
-├── README.md
-├── docs/
-│   ├── CHANNEL_BRIEF.md
-│   ├── STYLE_GUIDE.md
-│   ├── ANIMATION_GUIDE.md
-│   ├── WORKFLOW.md
-│   ├── PROJECT_STATUS.md
-│   ├── ROADMAP_NEXT_PHASES.md
-│   ├── VIDEO_PRODUCTION_STEP_BY_STEP.md
-│   ├── VIDEO_QA_CHECKLIST.md
-│   ├── ASSETS_AND_AUDIO.md
-│   ├── GIT_AND_BACKUP.md
-│   └── SOP_ORIGINAL.md
-├── content/
-│   └── templates/               # Research / script / storyboard / metadata / analytics
-├── src/
-│   ├── theme/
-│   ├── components/
-│   │   ├── typography/
-│   │   ├── ui/
-│   │   ├── diagrams/
-│   │   └── effects/
-│   ├── compositions/
-│   │   └── ComponentShowcase/
-│   ├── Composition.tsx          # Sandbox cũ
-│   ├── Root.tsx
-│   └── index.ts
-├── .agents/skills/              # Remotion skills hiện có
-├── public/                      # Tạo khi cần tài nguyên phục vụ Remotion
-└── out/                         # Output, được .gitignore
-```
+## 5. Tài liệu sử dụng
 
-**Quan trọng:** Một số đường dẫn phía trên (`src/scenes/`, các folder episode, scripts tự động, `public/`) sẽ được tạo khi triển khai các phase sau; danh sách này không có nghĩa chúng đã tồn tại trong bản ZIP.
+- [CHANNEL_BRIEF.md](docs/CHANNEL_BRIEF.md): định hướng nội dung và đối tượng người xem.
+- [STYLE_GUIDE.md](docs/STYLE_GUIDE.md): màu sắc, font, bố cục và đồ họa.
+- [ANIMATION_GUIDE.md](docs/ANIMATION_GUIDE.md): quy tắc chuyển động trong Remotion.
+- [WORKFLOW.md](docs/WORKFLOW.md): tổng quan các bước sản xuất.
+- [VIDEO_PRODUCTION_STEP_BY_STEP.md](docs/VIDEO_PRODUCTION_STEP_BY_STEP.md): hướng dẫn thực hiện chi tiết.
+- [ASSETS_AND_AUDIO.md](docs/ASSETS_AND_AUDIO.md): voice-over, media, phụ đề và giấy phép.
+- [VIDEO_QA_CHECKLIST.md](docs/VIDEO_QA_CHECKLIST.md): checklist kiểm tra video.
+- [GIT_AND_BACKUP.md](docs/GIT_AND_BACKUP.md): quản lý code và backup.
 
-## 5. Làm video mới sau khi hoàn tất Phase 4–6
+Quy tắc dành cho AI/coding agent nằm trong [AGENTS.md](AGENTS.md).
 
-Bắt đầu từ [VIDEO_PRODUCTION_STEP_BY_STEP.md](docs/VIDEO_PRODUCTION_STEP_BY_STEP.md). Tóm tắt:
+## 6. Nguyên tắc cần giữ
 
-1. Chọn chủ đề, tạo `content/<episode-id>/` từ template.
-2. Research có nguồn → viết script tiếng Anh 350–500 từ làm mốc ban đầu → xác minh kỹ thuật.
-3. Chuẩn bị giọng đọc và storyboard theo từng scene.
-4. Antigravity xây scene **từng cái một**, tận dụng các component đã có.
-5. Preview, thu WAV, đồng bộ hình/tiếng, thêm nhạc/SFX có quyền sử dụng.
-6. Render MP4 1080p30; làm SRT, thumbnail, metadata; QA toàn bộ bản xuất.
-7. Đăng YouTube và ghi lại analytics để cải tiến video sau.
-
-**Không chạy bước tạo episode production ngay khi Phase 4–6 chưa xong**. Có thể research, viết script hoặc luyện đọc trước mà không cần token Antigravity.
-
-## 6. Tài liệu nên đọc theo thứ tự
-
-1. [PROJECT_STATUS](docs/PROJECT_STATUS.md) — đã xong gì, thiếu gì.
-2. [ROADMAP_NEXT_PHASES](docs/ROADMAP_NEXT_PHASES.md) — tuần sau bắt đầu Phase 4 thế nào.
-3. [CHANNEL_BRIEF](docs/CHANNEL_BRIEF.md) — đối tượng xem và giá trị kênh.
-4. [STYLE_GUIDE](docs/STYLE_GUIDE.md) + [ANIMATION_GUIDE](docs/ANIMATION_GUIDE.md).
-5. [WORKFLOW](docs/WORKFLOW.md) — quy trình tổng quan.
-6. [VIDEO_PRODUCTION_STEP_BY_STEP](docs/VIDEO_PRODUCTION_STEP_BY_STEP.md) — hướng dẫn thao tác từng bước.
-7. [VIDEO_QA_CHECKLIST](docs/VIDEO_QA_CHECKLIST.md) — kiểm tra trước khi đăng.
-
-## 7. An toàn project
-
-- Mỗi phase: đọc `AGENTS.md` → chỉ sửa file trong phạm vi → chạy `npm run lint` → xem preview → xem `git diff` → chỉ commit/push khi chủ project chấp thuận.
-- Không commit `node_modules/`, `out/`, `.env`, file video render lớn.
-- Không làm nhiều coding agents cùng sửa một file.
-- Giữ bản gốc WAV, storyboard, thumbnail và file dựng bên ngoài Git hoặc trên nơi lưu trữ riêng.
-- Không dùng nhạc, hình, font hoặc assets chưa rõ quyền sử dụng.
-
-## 8. Lưu ý bản quyền
-
-Repository đang khai báo `UNLICENSED` ở `package.json`; không tự ý đổi license. Kiểm tra chính sách license của Remotion và các tài nguyên trước khi thương mại hóa nội dung hoặc chia sẻ source.
+- Tái sử dụng theme, component và scene trước khi viết mới.
+- Kiểm chứng thông tin kỹ thuật; storyboard phải khớp lời thoại.
+- Làm và kiểm tra từng scene; không giao toàn bộ video cho AI trong một lượt.
+- Chỉ dùng font, hình ảnh, âm thanh có quyền sử dụng phù hợp.
+- Không commit `node_modules/`, `.env`, `out/` hoặc file render nặng.
+- Lưu riêng bản gốc voice-over, tài nguyên và file dựng để có thể sửa video sau này.

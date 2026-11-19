@@ -1,72 +1,63 @@
-# AGENTS.md — Minimal Tech Explainer
+# Coding Agent Instructions — Minimal Tech Explainer
 
-> Quy tắc chung cho Antigravity, Claude Code, Codex và coding agent tương thích. Antigravity đang là agent chính. **Đọc file này trước khi thay đổi code.**
+## Purpose
 
-## 1. Mục tiêu, phạm vi và trạng thái
+Maintain a reusable **React + TypeScript + Remotion** production system for 3–5 minute English-language, faceless technical explainer videos. The content focuses on System Design, Backend Engineering, Networking, Databases, Distributed Systems, and Cloud Computing.
 
-- Một **Remotion base project** phục vụ nhiều video faceless English tech explainers (3–5 phút; 1920×1080; 30 FPS).
-- Chủ đề: System Design, Backend, Networking, Databases, Distributed Systems, Cloud.
-- Tái sử dụng component/theme/scene; mỗi episode có thư mục riêng ở `content/`.
-- Trạng thái tính theo bản ZIP ngày 18/11/2026: hoàn tất thư viện component Phase 3A–3D; **Phase 4–6 chưa triển khai**.
-- Trước mỗi task, đọc **`docs/PROJECT_STATUS.md`** và **`docs/ROADMAP_NEXT_PHASES.md`**; không coi mô tả roadmap là code đã tồn tại.
+**Target video:** 1920 × 1080, 30 FPS, 16:9. Reuse the same project for all episodes.
 
-## 2. Tài liệu chuẩn
+## Read before editing
 
-1. `docs/CHANNEL_BRIEF.md`: định vị và khán giả.
-2. `docs/STYLE_GUIDE.md`: theme và màu, font, geometry.
-3. `docs/ANIMATION_GUIDE.md`: frame-based motion, spring và sequence timing.
-4. `docs/WORKFLOW.md`: pipeline cấp cao.
-5. `docs/VIDEO_PRODUCTION_STEP_BY_STEP.md`: SOP thao tác thực tế **sau khi đã hoàn tất base project**.
-6. `docs/VIDEO_QA_CHECKLIST.md`: nghiệm thu video.
-7. `docs/ASSETS_AND_AUDIO.md`: audio/assets/fonts/license.
-8. `docs/GIT_AND_BACKUP.md`: quản lý phiên bản và media.
-9. `docs/SOP_ORIGINAL.md`: bản SOP người dùng gửi làm tài liệu gốc; nếu khác nhau, báo xung đột rõ ràng thay vì tự ý suy đoán.
+1. Inspect the existing files and understand the requested change before writing code. Do not assume that planned files or features already exist.
+2. Read only the relevant project documents:
+   - `docs/CHANNEL_BRIEF.md` — audience and editorial direction.
+   - `docs/STYLE_GUIDE.md` — visual system and layout.
+   - `docs/ANIMATION_GUIDE.md` — frame-based motion standards.
+   - `docs/WORKFLOW.md` — production workflow.
+   - `docs/VIDEO_PRODUCTION_STEP_BY_STEP.md` — episode creation process.
+   - `docs/ASSETS_AND_AUDIO.md` — assets, audio, subtitles and licensing.
+   - `docs/VIDEO_QA_CHECKLIST.md` — final video quality checks.
+3. Consult the relevant installed Remotion skills in `.agents/skills/` when accessible. Do not reinstall, replace, or modify skills unless requested.
 
-## 3. Repo hiện có (không suy diễn)
+## Implementation rules
 
-- `src/theme/`: tokens, layout, fonts, animation configs.
-- `src/components/{typography,ui,diagrams,effects}/`: các thành phần đã có.
-- `src/compositions/ComponentShowcase/index.tsx`: demo 4 segment Phase 3A–3D (600 frames).
-- `src/Composition.tsx`: sandbox cũ; **giữ nguyên** trừ khi có yêu cầu cụ thể.
-- `src/Root.tsx`: đăng ký sandbox + `ComponentShowcase`.
-- `.agents/skills/`: Remotion skills có trong ZIP.
-- `.claude/skills/`: thư mục có nhưng **trống trong ZIP được kiểm tra**; không tuyên bố là symlink hoặc chứa skills nếu chưa kiểm tra lại môi trường thực tế.
-- `src/scenes/`, episode master composition và automation scripts: **chưa triển khai**.
+- **Work on the requested scope only.** Implement one clearly defined component, scene, or change at a time.
+- Reuse existing code in `src/theme/`, `src/components/`, and `src/compositions/` whenever possible.
+- Use TypeScript with well-defined props and predictable component behavior. Avoid unnecessary abstractions and dependencies.
+- Keep design tokens centralized; do not duplicate colors, font settings, spacing, or animation presets in individual components.
+- Use the approved visual style: dark background, readable type, restrained highlights, clean system diagrams, and purposeful motion.
+- Do not rewrite unrelated components or remove working compositions. Only update `src/Root.tsx` when registering or changing compositions is part of the task.
+- Do not add packages, alter build configuration, change repository licensing, or restructure the project without a clear need and approval.
+- Do not invent technical facts, benchmark figures, or system behavior. Keep diagrams consistent with verified explanations and the approved storyboard.
+- Use assets with a verifiable right to use them; do not insert unlicensed audio, imagery, logos, or fonts.
 
-## 4. Protocol cho agent
+## Remotion animation rules
 
-1. Trước code: đọc các tài liệu phù hợp, kiểm tra source hiện tại, báo rõ phạm vi, file sẽ sửa và rủi ro.
-2. Đọc Remotion skills đã cài trong `.agents/skills/` theo loại nhiệm vụ: `remotion-best-practices`, `remotion-markup`, `remotion-interactivity`, `remotion-studio`, `remotion-render`, `remotion-captions` khi liên quan.
-3. **Không** reinstall hoặc overwrite skills, không thêm dependency hoặc thay đổi kiến trúc lớn nếu chưa được duyệt.
-4. **Không** xóa/sửa `remotion.config.ts`, `package.json`, `tsconfig.json`, sandbox, các phase đã duyệt nếu không liên quan.
-5. Reuse `src/theme/` và các components hiện có. Không hardcode lại palette khi đã có token.
-6. Animation Remotion phải deterministic dựa trên frames; phân biệt frame toàn composition với frame cục bộ bên trong `<Sequence>`.
-7. Mỗi task chỉ làm **một phase hoặc một scene**, luôn có preview và kiểm thử.
-8. Không dùng ảnh, nhạc, font, video hoặc logo không rõ quyền sử dụng; fact-check thông tin kỹ thuật.
-9. Không chạy commit, push, rebase, reset, force push nếu không có yêu cầu trực tiếp.
-10. Khi kết thúc: nêu thay đổi, lệnh đã chạy, kết quả lint/typecheck, các frame đã preview, vấn đề còn tồn tại, `git status` và diff tóm tắt.
+- Animations must be **deterministic and frame-based**. Use `useCurrentFrame()`, `useVideoConfig()`, `spring()`, and `interpolate()` as appropriate.
+- Account for **sequence-local frames**: `useCurrentFrame()` inside a `<Sequence>` starts at that sequence's local frame zero. Make time offsets explicit.
+- Clamp interpolation where needed. Check states before, during, and after each animation, including final visibility.
+- Avoid wall-clock timers, `setInterval`, and CSS keyframe animations for video motion.
+- Keep nodes, labels, arrowheads, and packets inside the canvas/safe zones. Ensure connections attach to node boundaries and moving packets follow the correct path.
+- Prioritize technical clarity over decorative effects. Review visuals at full resolution and at smaller viewing sizes.
 
-## 5. Design / technical standards
+## Episode workflow
 
-- Kích thước production: `1920x1080 @ 30fps` (sandbox có thể khác).
-- Màu theo `src/theme/colors.ts`, font từ `src/theme/fonts.ts`: Inter và JetBrains Mono qua `@remotion/google-fonts`.
-- Safe zone hiện có theo `src/theme/layout.ts`: x = 80px, y = 60px.
-- Cần cân đối bố cục và độ lớn chữ cho thiết bị di động; preview không đủ, phải xem **render thật**.
-- Dùng props rõ nghĩa, strongly typed TypeScript, component tái sử dụng, hạn chế dependency.
+- Keep each episode's research, script, storyboard, metadata, voice, and assets under `content/<episode-id>/`.
+- Write **narration and public-facing video copy in English**. User-facing workflow documentation may be in Vietnamese.
+- Review research and script before implementing visuals. Follow the approved storyboard scene by scene.
+- Keep original media and editing assets separate from generated renders. Place files needed by Remotion's `staticFile()` in `public/`.
+- Choose a clear audio-finishing workflow (Remotion or an external editor) and avoid embedding the same voice-over twice.
 
-## 6. Lệnh kiểm tra đã có
+## Validation and handoff
+
+For code changes, perform the checks relevant to the task:
 
 ```bash
-npm run dev
 npm run lint
 npx remotion compositions src/index.ts
 ```
 
-Chỉ thực hiện `npm ci` khi cần cài dependency trong môi trường mới. Không tái tạo project Blank.
-
-## 7. Workflow review
-
-- Xem diff: `git status --short`, `git diff`, `git diff --cached`.
-- Kiểm tra `npm run lint` (bao gồm `eslint src && tsc` theo package.json hiện tại).
-- Preview Scene ở Remotion Studio; kiểm tra trước/giữa/sau animation, clipping và audio sync.
-- Sau khi được người dùng chấp thuận mới commit/push theo `docs/GIT_AND_BACKUP.md`.
+- Preview affected compositions in Remotion Studio; inspect key frames and any timing or layout changes.
+- When possible, verify an actual still or video render. Do not claim a visual/render check passed unless it was performed.
+- Review `git status` and the relevant diff. Never run `git add`, commit, push, reset, rebase, or force-push unless explicitly asked.
+- Finish with a **brief report**: files changed, checks performed and their results, and any unresolved issue. Avoid long status narratives.
